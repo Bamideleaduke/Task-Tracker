@@ -85,6 +85,11 @@ input[type="checkbox"] {
 .input-tag::placeholder {
   padding-left: 0.7rem;
 }
+.footer{
+  margin-top: 3rem;
+  text-align: center;
+  color: #00000072;
+}
 /* @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

@@ -1,44 +1,76 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import AddTask from "./component/AddTask";
-import { FetchData } from "./component/FetchData";
+import Footer from "./component/Footer";
 import { Header } from "./component/Header";
 import Tasks from "./component/Tasks";
 
 // task state
 function App() {
   const [taskItem, setTaskItem] = useState([
-    {
-      id: 1,
-      text: "Doctors Appointment",
-      day: "Feb %th at 2:30pm",
-      reminder: false,
-    },
-    {
-      id: 2,
-      text: "Lunch Date",
-      day: "Feb 14th at 2:30pm",
-      reminder: false,
-    },
-    {
-      id: 3,
-      text: "Strategy Meeting",
-      day: "Dec 20th at 12:30pm",
-      reminder: false,
-    },
+   
   ]);
   // task state
 
+  useEffect(() => {
+    // fetch("https://jsonplaceholder.typicode.com/users")
+    //   .then((json) => json.json())
+    //   .then((data) => {
+    //     console.log(data);
+    //     setusers(data);
+    //   });
+
+    const getTasks = async () => {
+        const serverData = await fetchTasks();
+
+        // console.log(serverData);
+        setTaskItem(serverData)
+
+    }
+    getTasks()
+
+  }, []);
+
+
+  // fetch task
+  const fetchTasks = async () => {
+    const dataLink = await fetch("https://jsonplaceholder.typicode.com/users");
+    const data = await dataLink.json();
+
+  
+
+  return data
+
+  };
+  fetchTasks();
 
 
 
   // add task
-  const addTask = (task) => {
+  const addTask = async (task) => {
+    const res = await fetch('https://jsonplaceholder.typicode.com/posts/1', {
+      method: 'PUT',
+      body: JSON.stringify(task),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      }
+    })
+
+    const data = await res.json();
+
+    setTaskItem([...taskItem, data]);
+
+    console.log("added new task", data);
+
+
     // console.log(task);
-    const id = Math.floor(Math.random() * 10000) + 1;
-    const newTask = { id, ...task };
-    setTaskItem([...taskItem, newTask]);
-    console.log("added new task", id);
+    // const id = Math.floor(Math.random() * 10000) + 1;
+    // const newTask = { id, ...task };
+
+
+
+    // setTaskItem([...taskItem, newTask]);
+    // console.log("added new task", id);
   };
 
   // delete task
@@ -79,8 +111,9 @@ function App() {
         ) : (
           "No Tasks To Show"
         )}
+      <Footer />
       </div>
-      <FetchData />
+      {/* <FetchData  /> */}
     </div>
 
   );
